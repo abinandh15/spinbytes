@@ -17,6 +17,7 @@
     align-items: center;
     color: #FFF;
     background-size: cover;
+    min-height: calc(100vh - 80px);
 }
 
 .hero .container {

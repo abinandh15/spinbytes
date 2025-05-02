@@ -121,6 +121,9 @@
     }
   }
   
+  .section {
+    min-height: 100vh;
+  }
   /* ======== 2. CSS RESET ======== */
   *, *::before, *::after {
     box-sizing: border-box;
@@ -143,6 +146,7 @@
     color: var(--color-gray-900);
     background-color: var(--color-white);
     min-height: 100vh;
+    padding-top: 80px;
   }
   
   img, picture, video, canvas, svg {
@@ -730,4 +734,10 @@
     .lg\:block { display: block; }
     .lg\:hidden { display: none; }
     .lg\:flex { display: flex; }
+  }
+
+  @media (max-width: 768px) {
+    body {
+      padding-top: 60px; /* Adjust for smaller header on mobile */
+    }
   }

@@ -298,41 +298,101 @@ document.addEventListener('DOMContentLoaded', function() {
     // Call on load and scroll
     window.addEventListener('scroll', setActiveNavLinks);
     setActiveNavLinks();
+
+    // The problem is likely in the scroll event listener implementation
+// Let's create a better version of this code
+
+document.addEventListener('DOMContentLoaded', function() {
+  const header = document.querySelector('.header');
+  let lastScrollTop = 0;
+  let scrollTimer;
   
-    // Make header sticky on scroll with animation
-    const header = document.querySelector('.header');
-    let lastScrollTop = 0;
-    let scrollTimer;
+  // Ensure the header element exists before attaching events
+  if (!header) return;
   
-    window.addEventListener('scroll', function() {
-      const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  function handleScroll() {
+    const currentScrollTop = window.scrollY;
+    
+    // Add scrolled class when we're not at the top
+    if (currentScrollTop > 100) {
+      header.classList.add('header--scrolled');
       
-      if (currentScrollTop > 100) {
-        header.classList.add('header--scrolled');
-        
-        // Hide header when scrolling down, show when scrolling up
-        if (currentScrollTop > lastScrollTop + 10) {
-          // Scrolling down - hide header, but not when mobile menu is open
-          if (!document.body.classList.contains('menu-open')) {
-            header.style.transform = 'translateY(-100%)';
-          }
-        } else if (currentScrollTop < lastScrollTop - 10) {
-          // Scrolling up - show header
-          header.style.transform = 'translateY(0)';
+      // Hide header when scrolling down (only if menu is closed)
+      if (currentScrollTop > lastScrollTop + 5) {
+        if (!document.body.classList.contains('menu-open')) {
+          header.style.transform = 'translateY(-100%)';
         }
-      } else {
-        // At the top of the page
-        header.classList.remove('header--scrolled');
+      } 
+      // Show header when scrolling up
+      else if (currentScrollTop < lastScrollTop - 5) {
         header.style.transform = 'translateY(0)';
       }
+    } else {
+      // At the top of the page - reset styles
+      header.classList.remove('header--scrolled');
+      header.style.transform = 'translateY(0)';
+    }
+    
+    lastScrollTop = currentScrollTop;
+    
+    // Clear previous timeout and set a new one
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(function() {
+      // After scrolling has stopped, show the header again
+      header.style.transform = 'translateY(0)';
+    }, 800); // Reduced timeout for better responsiveness
+  }
+
+  // Throttle the scroll event to improve performance
+  let ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      window.requestAnimationFrame(function() {
+        handleScroll();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+  
+  // Initial call to set correct state on page load
+  handleScroll();
+});
+  
+    // // Make header sticky on scroll with animation
+    // const header = document.querySelector('.header');
+    // let lastScrollTop = 0;
+    // let scrollTimer;
+  
+    // window.addEventListener('scroll', function() {
+    //   const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
       
-      lastScrollTop = currentScrollTop;
+    //   if (currentScrollTop > 100) {
+    //     header.classList.add('header--scrolled');
+        
+    //     // Hide header when scrolling down, show when scrolling up
+    //     if (currentScrollTop > lastScrollTop + 10) {
+    //       // Scrolling down - hide header, but not when mobile menu is open
+    //       if (!document.body.classList.contains('menu-open')) {
+    //         header.style.transform = 'translateY(-100%)';
+    //       }
+    //     } else if (currentScrollTop < lastScrollTop - 10) {
+    //       // Scrolling up - show header
+    //       header.style.transform = 'translateY(0)';
+    //     }
+    //   } else {
+    //     // At the top of the page
+    //     header.classList.remove('header--scrolled');
+    //     header.style.transform = 'translateY(0)';
+    //   }
       
-      // Clear previous timeout and set a new one
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(function() {
-        // After scrolling has stopped, show the header again
-        header.style.transform = 'translateY(0)';
-      }, 1000);
-    });
+    //   lastScrollTop = currentScrollTop;
+      
+    //   // Clear previous timeout and set a new one
+    //   clearTimeout(scrollTimer);
+    //   scrollTimer = setTimeout(function() {
+    //     // After scrolling has stopped, show the header again
+    //     header.style.transform = 'translateY(0)';
+    //   }, 1000);
+    // });
   });

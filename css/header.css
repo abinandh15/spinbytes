@@ -6,14 +6,17 @@
 
 
 
-/* Header container */
+/* Header container - add these properties */
 .header {
   width: 100%;
-  position: relative;
+  position: fixed; /* Change from relative to fixed */
+  top: 0;
+  left: 0;
+  z-index: 100;
   background-color: #ffffff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 16px 0;
-  transition: transform 0.3s ease, padding 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, padding 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 .header__inner {
@@ -23,9 +26,11 @@
 }
 
 /* Scrolled header state */
+/* Scrolled header state*/
 .header--scrolled {
   padding: 10px 0;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.95);
 }
 
 /* Logo styles */
