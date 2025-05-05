@@ -1,0 +1,331 @@
+/* 
+  ========================================
+  SOLUTIONS SECTION STYLES (FIXED)
+  ========================================
+*/
+
+/* Import Google Fonts - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* Solutions section */
+.solutions-section {
+  padding: 100px 0;
+  background-color: #EDF1F7;
+  position: relative;
+  opacity: 1; /* Changed from 0 to 1 to fix visibility issue */
+  transform: translateY(0); /* Changed from translateY(30px) to 0 */
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.solutions-section .container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Solutions header */
+.solutions-section__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 60px;
+}
+
+.solutions-section__title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #080808;
+  flex: 0 0 40%;
+  margin: 0;
+}
+
+.solutions-section__description {
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #333333;
+  flex: 0 0 55%;
+  margin: 0;
+  padding-top: 10px;
+}
+
+/* Solutions cards */
+.solutions-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 60px;
+}
+
+/* Solution card base */
+.solution-card {
+  flex: 1 1 calc(50% - 15px);
+  min-width: 250px;
+  height: 260px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  opacity: 1; /* Changed from 0 to 1 to fix visibility issue */
+  transform: translateY(0); /* Changed from translateY(20px) to 0 */
+}
+
+.solution-card:hover {
+  transform: translateY(-5px) !important; /* Added !important to ensure hover works */
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Animation for cards entering viewport - modified to be visible by default */
+@keyframes cardFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.solution-card {
+  animation: cardFadeIn 0.6s forwards;
+}
+
+/* Card entrance delay */
+.solution-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.solution-card:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+/* Card specific backgrounds */
+.solution-card--casino {
+  background: linear-gradient(135deg, #1D2285, #131564);
+}
+
+.solution-card--sports {
+  background: linear-gradient(135deg, #0A3D91, #051F54);
+}
+
+/* Card header */
+.solution-card__header {
+  padding: 30px 30px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 3;
+}
+
+.solution-card__title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #fff;
+  margin: 0;
+}
+
+.solution-card__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.solution-card__link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.solution-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Default content (visible by default) */
+.solution-card__default-content {
+  padding: 20px 30px 30px;
+  position: relative;
+  z-index: 2;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.solution-card__description {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+/* Hover content (hidden by default) */
+.solution-card__hover-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  padding: 30px;
+  transform: translateY(100%);
+  transition: transform 0.4s ease;
+  z-index: 2;
+}
+
+/* Show hover content on hover */
+.solution-card:hover .solution-card__hover-content {
+  transform: translateY(0);
+}
+
+/* Fade out default content on hover */
+.solution-card:hover .solution-card__default-content {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* Features list */
+.solution-card__features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.solution-card__feature {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #222;
+  padding: 8px 0;
+  position: relative;
+}
+
+.solution-card__feature:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Card image */
+.solution-card__image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 45%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 20px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.solution-card__image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .solutions-section__header {
+    flex-direction: column;
+  }
+  
+  .solutions-section__title {
+    flex: 0 0 100%;
+    margin-bottom: 30px;
+    font-size: 40px;
+  }
+  
+  .solutions-section__description {
+    flex: 0 0 100%;
+  }
+  
+  .solution-card {
+    height: 280px;
+  }
+  
+  .solution-card__title {
+    font-size: 24px;
+  }
+  
+  .solution-card__description {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .solutions-cards {
+    flex-direction: column;
+  }
+  
+  .solution-card {
+    flex: 1 1 100%;
+    height: 260px;
+  }
+  
+  .solution-card__hover-content {
+    padding: 20px;
+  }
+  
+  .solution-card__feature {
+    font-size: 13px;
+    padding: 6px 0;
+  }
+  
+  .solutions-section__title {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 576px) {
+  .solutions-section {
+    padding: 60px 0;
+  }
+  
+  .solution-card {
+    height: auto;
+    min-height: 300px;
+  }
+  
+  .solution-card__header {
+    padding: 20px 20px 0;
+  }
+  
+  .solution-card__default-content {
+    padding: 15px 20px 30px;
+  }
+  
+  .solution-card__title {
+    font-size: 22px;
+  }
+  
+  .solution-card__description {
+    font-size: 12px;
+  }
+  
+  .solution-card__image {
+    width: 40%;
+    padding-right: 10px;
+  }
+  
+  .solution-card__link {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .solutions-section__title {
+    font-size: 32px;
+  }
+}
