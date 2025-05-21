@@ -17,10 +17,12 @@
     <link rel="stylesheet" href="css/global.css" />
     <link rel="stylesheet" href="css/header.css" />
     <link rel="stylesheet" href="css/home.css" />
-    <link rel="stylesheet" href="css/hero.css">    
-  <link rel="stylesheet" href="css/solutions.css">
+    <link rel="stylesheet" href="css/hero.css" />
+    <link rel="stylesheet" href="css/solutions.css" />
     <!-- Page Specific CSS will be added here -->
   </head>
+  <script src="js/main.js"></script>
+  <script src="js/hero.js"></script>
   <body>
     <!-- Menu Overlay -->
     <div class="menu-overlay"></div>
@@ -54,10 +56,10 @@
                 <a href="#integrations" class="main-nav__link">INTEGRATIONS</a>
               </li>
               <li class="main-nav__item">
-                <a href="#benefits" class="main-nav__link">BENEFITS</a>
+                <a href="#Benefits" class="main-nav__link">BENEFITS</a>
               </li>
               <li class="main-nav__item">
-                <a href="#company" class="main-nav__link">COMPANY</a>
+                <a href="#about" class="main-nav__link">COMPANY</a>
               </li>
             </ul>
           </nav>
@@ -101,8 +103,8 @@
         <div class="container">
           <div class="hero__content">
             <h1 class="hero__title">
-              The Power Behind
-              <span class="hero__title-highlight">Profitable</span> Platforms
+              The Power Behind <br />
+              <span class="hero__title-highlight"></span> <br /> Platforms
             </h1>
 
             <p class="hero__text">
@@ -117,7 +119,7 @@
 
           <div class="hero__image">
             <img
-              src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/d3d07b72-6783-4c4c-566b-645870be0500/public"
+              src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/43eacffb-bc0c-4bb2-bfc3-43fe2824c800/public"
               alt="Gaming Platform Visualization"
             />
           </div>
@@ -146,120 +148,2181 @@
 
 
 
-
       <!-- Features Section -->
       <section id="solution" class="solutions-section">
+        <style>
+          .solution-card__img{
+            /* width: 350px; */
+          }
+        </style>
         <div class="container">
           <div class="solutions-section__header">
             <h2 class="solutions-section__title">
-              Winning<br>
+              Winning<br />
               iGaming Solutions
             </h2>
-            
+
             <p class="solutions-section__description">
-              SpinBytes delivers cutting-edge white-label gaming solutions for online casinos, 
-              sportsbooks, and beyond. Our technology is built to scale—offered as standalone 
-              modules or a complete, all-in-one iGaming platform. Whether you're launching a 
-              new brand or upgrading your existing one, SpinBytes equips you with everything 
-              from seamless player management and secure payment integrations to rich 
-              gaming content across sports and casino verticals—designed to supercharge 
-              your performance and player experience.
+              SpinBytes delivers cutting-edge white-label gaming solutions for
+              online casinos, sportsbooks, and beyond. Our technology is built
+              to scale—offered as standalone modules or a complete, all-in-one
+              iGaming platform. Whether you're launching a new brand or
+              upgrading your existing one, SpinBytes equips you with everything
+              from seamless player management and secure payment integrations to
+              rich gaming content across sports and casino verticals—designed to
+              supercharge your performance and player experience.
             </p>
+
+
           </div>
-          
+
+          <script>
+
+            document.addEventListener('DOMContentLoaded', () => {
+              const solutionSection = document.getElementById('solution');
+              const cardsContainer = document.querySelector('.solutions-cards');
+
+              let isHorizontalScrolling = false;
+              let horizontalScrollComplete = false;
+              let lastScrollY = window.scrollY;
+              let lockScrollPosition = 0;
+              let scrollLocked = false;
+              let sectionTop = 0, sectionHeight = 0;
+              let currentHorizontalScroll = 0;
+              let maxHorizontalScroll = 0;
+
+              cardsContainer.classList.add('smooth-transition');
+
+              const style = document.createElement('style');
+              style.textContent = `
+                .smooth-transition { transition: transform 0.1s ease; }
+                .immediate { transition: none !important; }
+                body.scroll-lock { overflow: hidden !important; overscroll-behavior: none; touch-action: none; }
+              `;
+              document.head.appendChild(style);
+
+              const updateMetrics = () => {
+                const rect = solutionSection.getBoundingClientRect();
+                sectionTop = rect.top + window.scrollY;
+                sectionHeight = rect.height;
+                maxHorizontalScroll = cardsContainer.scrollWidth - cardsContainer.clientWidth;
+              };
+
+              const lockScroll = () => {
+                // scrollLocked = true;
+                isHorizontalScrolling = true;
+                lockScrollPosition = window.scrollY;
+                document.body.classList.add('scroll-lock');
+                window.scrollTo({ top: lockScrollPosition });
+              };
+
+              const unlockScroll = () => {
+                scrollLocked = false;
+                isHorizontalScrolling = false;
+                document.body.classList.remove('scroll-lock');
+              };
+
+              const shouldEnterScroll = () => {
+                const trigger = sectionTop - window.innerHeight * 0.2;
+                return window.scrollY >= trigger && !horizontalScrollComplete;
+              };
+
+              const applyTransform = () => {
+                cardsContainer.style.transform = `translateX(-${currentHorizontalScroll}px)`;
+              };
+
+              const handleHorizontalScroll = (deltaY, isDown) => {
+                if (!isDown && currentHorizontalScroll < maxHorizontalScroll * 0.1) {
+                  currentHorizontalScroll = 0;
+                  applyTransform();
+                  unlockScroll();
+                  return false;
+                }
+
+                const factor = isDown ? 2.5 : 3.5;
+                currentHorizontalScroll += Math.sign(deltaY) * factor * Math.abs(deltaY);
+                currentHorizontalScroll = Math.max(0, Math.min(currentHorizontalScroll, maxHorizontalScroll));
+                applyTransform();
+
+                if (currentHorizontalScroll >= maxHorizontalScroll) {
+                  horizontalScrollComplete = true;
+                  setTimeout(unlockScroll, 150);
+                  return false;
+                }
+
+                return true;
+              };
+
+              let lastScrollTime = 0;
+              const handleWheel = (e) => {
+                const now = Date.now();
+                if (now - lastScrollTime < 16) return e.preventDefault();
+                lastScrollTime = now;
+
+                const isDown = e.deltaY > 0;
+                if (shouldEnterScroll() || (isHorizontalScrolling && !horizontalScrollComplete)) {
+                  if (!isHorizontalScrolling) lockScroll();
+                  if (handleHorizontalScroll(e.deltaY, isDown)) {
+                    e.preventDefault();
+                    if (scrollLocked) window.scrollTo({ top: lockScrollPosition });
+                  }
+                }
+              };
+
+              const handleScroll = () => {
+                const currentY = window.scrollY;
+                const isDown = currentY > lastScrollY;
+
+                if (isHorizontalScrolling && scrollLocked && !horizontalScrollComplete) {
+                  if (Math.abs(currentY - lockScrollPosition) > 2) {
+                    window.scrollTo({ top: lockScrollPosition });
+                  }
+                }
+
+                if (!isDown && currentY < lockScrollPosition - 80) {
+                  horizontalScrollComplete = false;
+                  currentHorizontalScroll = 0;
+                  cardsContainer.classList.add('immediate');
+                  applyTransform();
+                  setTimeout(() => cardsContainer.classList.remove('immediate'), 50);
+                  unlockScroll();
+                }
+
+                lastScrollY = currentY;
+              };
+
+              let touchStartX = 0, touchStartY = 0, lastTouchX = 0, lastTouchY = 0;
+              let touchDirection = null;
+
+              const handleTouchStart = (e) => {
+                const t = e.touches[0];
+                touchStartX = lastTouchX = t.clientX;
+                touchStartY = lastTouchY = t.clientY;
+                touchDirection = null;
+              };
+
+              const handleTouchMove = (e) => {
+                const t = e.touches[0];
+                const deltaX = lastTouchX - t.clientX;
+                const deltaY = lastTouchY - t.clientY;
+
+                if (!touchDirection && (Math.abs(touchStartX - t.clientX) > 10 || Math.abs(touchStartY - t.clientY) > 10)) {
+                  touchDirection = Math.abs(touchStartX - t.clientX) > Math.abs(touchStartY - t.clientY) ? 'horizontal' : 'vertical';
+                }
+
+                if (!isHorizontalScrolling && shouldEnterScroll()) lockScroll();
+
+                if (isHorizontalScrolling && !horizontalScrollComplete) {
+                  if (touchDirection === 'horizontal') {
+                    e.preventDefault();
+                    const move = deltaX * 1.2;
+                    currentHorizontalScroll = Math.max(0, Math.min(currentHorizontalScroll + move, maxHorizontalScroll));
+                    applyTransform();
+                    if (currentHorizontalScroll >= maxHorizontalScroll) {
+                      horizontalScrollComplete = true;
+                      setTimeout(unlockScroll, 150);
+                    } else if (currentHorizontalScroll <= 0 && deltaX < 0) {
+                      unlockScroll();
+                    }
+                  } else if (scrollLocked) {
+                    e.preventDefault();
+                    window.scrollTo({ top: lockScrollPosition });
+                  }
+                }
+
+                lastTouchX = t.clientX;
+                lastTouchY = t.clientY;
+              };
+
+              const handleTouchEnd = () => {
+                touchDirection = null;
+              };
+
+              const init = () => {
+                updateMetrics();
+                window.addEventListener('wheel', handleWheel, { passive: false });
+                window.addEventListener('scroll', handleScroll, { passive: true });
+                cardsContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
+                cardsContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
+                cardsContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
+                window.addEventListener('resize', () => {
+                  const prevMax = maxHorizontalScroll;
+                  updateMetrics();
+                  if (prevMax !== 0) {
+                    currentHorizontalScroll = (currentHorizontalScroll / prevMax) * maxHorizontalScroll;
+                    applyTransform();
+                  }
+                });
+              };
+
+              init();
+            });
+
+
+          </script>
+
           <div class="solutions-cards">
             <!-- White Label Casino Card -->
-            <div class="solution-card solution-card--casino">
-              <div class="solution-card__header">
-                <h3 class="solution-card__title">White Label Casino</h3>
-                
-                <a href="#" class="solution-card__link">
-                  <span class="solution-card__icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </span>
-                </a>
+             <a href="white-label-casino.html" >
+              <div class="solution-card solution-card--casino">
+                <div class="solution-card__header">
+                  <h3 class="solution-card__title">White Label <br /> Casino</h3>
+
+                  <a href="white-label-casino.html" class="solution-card__link">
+                    <span class="solution-card__icon">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M5 12H19M19 12L12 5M19 12L12 19"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </a>
+                </div>
+
+                <!-- Default content (shown initially) -->
+                <div class="solution-card__default-content">
+                  <p class="solution-card__description">
+                    SpinBytes provides a fully customizable white-label casino and
+                    sportsbook platform for fast, cost-effective market entry.
+                    Packed with top-tier games, secure payments, and powerful
+                    back-office tools, it's everything you need to launch and
+                    scale your iGaming brand.
+                  </p>
+                  <!-- <div class="solution-card__image"> -->
+                    <img
+                      src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/e2f80130-69ef-4036-ead7-ce115cedce00/public"
+                      alt="White Label Casino Solution"
+                    />
+                  <!-- </div> -->
+                </div>
+
+                <!-- Hover content (shown on hover) -->
+                <div class="solution-card__hover-content">
+                  <ul class="solution-card__features">
+                    <li class="solution-card__feature">
+                      Turnkey iGaming Platform for Rapid Market Entry
+                    </li>
+                    <li class="solution-card__feature">
+                      Complete Ownership of Your Casino Brand
+                    </li>
+                    <li class="solution-card__feature">
+                      Powerful Back Office and Multiple Payment Gateway
+                    </li>
+                  </ul>
+                  <div>
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/e2f80130-69ef-4036-ead7-ce115cedce00/public" class="solution-card__img"/>
+                  </div>
+                </div>
+
+
               </div>
-              
-              <!-- Default content (shown initially) -->
-              <div class="solution-card__default-content">
-                <p class="solution-card__description">
-                  SpinBytes provides a fully customizable white-label casino and sportsbook platform for fast, cost-effective market entry. Packed with top-tier games, secure payments, and powerful back-office tools, it's everything you need to launch and scale your iGaming brand.
-                </p>
+             </a>
+
+             <a href="blue-label-casino-1.html" >
+              <div class="solution-card solution-card--sports">
+                <div class="solution-card__header">
+                  <h3 class="solution-card__title">Sports Exchange</h3>
+
+                  <a href="blue-label-casino-1.html" class="solution-card__link">
+                    <span class="solution-card__icon">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M5 12H19M19 12L12 5M19 12L12 19"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </a>
+                </div>
+
+                <!-- Default content (shown initially) -->
+                <div class="solution-card__default-content">
+                  <p class="solution-card__description">
+                    SpinBytes offers a new-gen peer-to-peer Sports betting
+                    Exchange with enhanced capabilities for play betting, and
+                    real-time odds, backed by robust risk management, global
+                    sports coverage, and full operational support. It's built for
+                    high-performance trading and growth.
+                  </p>
+
+                   <!-- <div class="solution-card__image"> -->
+                <img
+                src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/54214973-1165-462b-d94e-033088b01200/public"
+                alt="Sports Exchange Solution"
+              />
+            <!-- </div> -->
+                </div>
+
+                <!-- Hover content (shown on hover) -->
+                <div class="solution-card__hover-content">
+                  <ul class="solution-card__features">
+                    <li class="solution-card__feature">
+                      Advanced Peer-to-Peer Betting Platform
+                    </li>
+                    <li class="solution-card__feature">
+                      Real-Time Odds and Risk Management
+                    </li>
+                    <li class="solution-card__feature">
+                      Global Sports Coverage and API Integration
+                    </li>
+                  </ul>
+                  <div>
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/54214973-1165-462b-d94e-033088b01200/public" class="solution-card__img"/>
+                  </div>
+                </div>
+
+
               </div>
-              
-              <!-- Hover content (shown on hover) -->
-              <div class="solution-card__hover-content">
-                <ul class="solution-card__features">
-                  <li class="solution-card__feature">Turnkey iGaming Platform for Rapid Market Entry</li>
-                  <li class="solution-card__feature">Complete Ownership of Your Casino Brand</li>
-                  <li class="solution-card__feature">Powerful Back Office and Multiple Payment Gateway</li>
-                </ul>
+             </a>
+
+
+             <a href="blue-label-casino-2.html" >
+              <div class="solution-card solution-card--sportsbook">
+                <div class="solution-card__header">
+                  <h3 class="solution-card__title">Sportsbook</h3>
+
+                  <a href="blue-label-casino-2.html" class="solution-card__link">
+                    <span class="solution-card__icon">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M5 12H19M19 12L12 5M19 12L12 19"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </a>
+                </div>
+
+                <!-- Default content (shown initially) -->
+                <div class="solution-card__default-content">
+                  <p class="solution-card__description">
+                    SpinBytes delivers a fully integrated sportsbook platform with pre-match and in-play betting, dynamic odds, and wide sports coverage. With real-time analytics, customizable markets, and seamless player experience, it’s designed for scalability and sustained engagement.
+                  </p>
+
+                   <!-- <div class="solution-card__image"> -->
+                <img
+                src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/7da8d301-304e-483c-f726-c43583fc7e00/public"
+                alt="Sports Exchange Solution"
+              />
+            <!-- </div> -->
+                </div>
+
+                <!-- Hover content (shown on hover) -->
+                <div class="solution-card__hover-content">
+                  <ul class="solution-card__features">
+                    <li class="solution-card__feature">
+                      Real-Time Sports Odds & Live Betting
+                    </li>
+                    <li class="solution-card__feature">
+                      Real-Time Odds and Risk Management
+                    </li>
+                    <li class="solution-card__feature">
+                      Global Sports Coverage and API Integration
+                    </li>
+                  </ul>
+                  <div>
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/7da8d301-304e-483c-f726-c43583fc7e00/public" class="solution-card__img"/>
+                  </div>
+                </div>
+
+
               </div>
-              
-              <div class="solution-card__image">
-                <img src="assets/images/white-label-casino.png" alt="White Label Casino Solution">
+             </a>
+
+
+             <a href="green-label-casino-1.html" >
+              <div class="solution-card solution-card--crypto">
+                <div class="solution-card__header">
+                  <h3 class="solution-card__title">Crypto Casino</h3>
+
+                  <a href="green-label-casino-1.html" class="solution-card__link">
+                    <span class="solution-card__icon">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M5 12H19M19 12L12 5M19 12L12 19"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </a>
+                </div>
+
+                <!-- Default content (shown initially) -->
+                <div class="solution-card__default-content">
+                  <p class="solution-card__description">
+                    SpinBytes Crypto Casino solution enables fast, secure crypto deposits and withdrawals with full transparency and blockchain reliability. Paired with top-tier games and customizable features, it’s built for the next generation of iGaming operators.
+                  </p>
+
+                   <!-- <div class="solution-card__image"> -->
+                <img
+                src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/af4f1aeb-1ad0-4ca3-a42d-a0efeb4aad00/public"
+                alt="Sports Exchange Solution"
+              />
+            <!-- </div> -->
+                </div>
+
+                <!-- Hover content (shown on hover) -->
+                <div class="solution-card__hover-content">
+                  <ul class="solution-card__features">
+                    <li class="solution-card__feature">
+                      Advanced Peer-to-Peer Betting Platform
+                    </li>
+                    <li class="solution-card__feature">
+                      Real-Time Odds and Risk Management
+                    </li>
+                    <li class="solution-card__feature">
+                      Global Sports Coverage and API Integration
+                    </li>
+                  </ul>
+                  <div>
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/af4f1aeb-1ad0-4ca3-a42d-a0efeb4aad00/public" class="solution-card__img"/>
+                  </div>
+
+                </div>
+
+
               </div>
+             </a>
+
+             <a href="white-label-casino-2.html" >
+              <div class="solution-card solution-card--partner">
+                <div class="solution-card__header">
+                  <h3 class="solution-card__title">Partner Network
+                    Managment</h3>
+
+                  <a href="white-label-casino-2.html" class="solution-card__link">
+                    <span class="solution-card__icon">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M5 12H19M19 12L12 5M19 12L12 19"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </a>
+                </div>
+
+                <!-- Default content (shown initially) -->
+                <div class="solution-card__default-content">
+                  <p class="solution-card__description">
+                    SpinBytes offers a next-gen peer-to-peer Sports Betting Exchange with advanced matching algorithms, in-play betting, and real-time odds. Backed by robust risk management, global sports coverage, and full operational support, it’s built for high-performance trading and growth.
+                  </p>
+
+                   <!-- <div class="solution-card__image"> -->
+                <img
+                src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/10e38750-3d95-4487-00b9-562b2672ec00/public"
+                alt="Sports Exchange Solution"
+              />
+            <!-- </div> -->
+                </div>
+
+                <!-- Hover content (shown on hover) -->
+                <div class="solution-card__hover-content">
+                  <ul class="solution-card__features">
+                    <li class="solution-card__feature">
+                      Advanced Peer-to-Peer Betting Platform
+                    </li>
+                    <li class="solution-card__feature">
+                      Seamless Multi-Sport Coverage
+                    </li>
+                    <li class="solution-card__feature">
+                      Full Risk Management & Reporting Tools
+                    </li>
+                  </ul>
+                  <div>
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/10e38750-3d95-4487-00b9-562b2672ec00/public" class="solution-card__img"/>
+                  </div>
+                </div>
+
+
+              </div>
+             </a>
+
+
+            <a href="green-label-casino-2.html" >
+              <div class="solution-card solution-card--game">
+                <div class="solution-card__header">
+                  <h3 class="solution-card__title">Sports Exchange</h3>
+
+                  <a href="green-label-casino-2.html" class="solution-card__link">
+                    <span class="solution-card__icon">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M5 12H19M19 12L12 5M19 12L12 19"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </a>
+                </div>
+
+                <!-- Default content (shown initially) -->
+                <div class="solution-card__default-content">
+                  <p class="solution-card__description">
+                    Seamlessly connect to 15+ top-tier providers through a single integration. Manage thousands of games with centralized control and real-time performance insights.
+                  </p>
+
+                   <!-- <div class="solution-card__image"> -->
+                <img
+                src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/aa74a12e-fcd7-4421-616c-53b3a7270a00/public"
+                alt="Sports Exchange Solution"
+              />
+            <!-- </div> -->
+                </div>
+
+                <!-- Hover content (shown on hover) -->
+                <div class="solution-card__hover-content">
+                  <ul class="solution-card__features">
+                    <li class="solution-card__feature">
+                      One time API integration
+                    </li>
+                    <li class="solution-card__feature">
+                      Centralized game management
+                    </li>
+                    <li class="solution-card__feature">
+                      Thousands of slots, live games, and more in one place
+                    </li>
+                  </ul>
+                  <div>
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/aa74a12e-fcd7-4421-616c-53b3a7270a00/public" class="solution-card__img"/>
+                  </div>
+                </div>
+
+
+              </div>
+            </a>
+
+
+
+
+          </div>
+      </section>
+
+      <section id="integrations">
+        <style>
+
+
+        .landing-page-3-body {
+            background: linear-gradient(180deg, #AFD3FF 0%, #EEF0FF 50.28%, #FFF 96.63%);
+            padding: 150px 20px;
+            min-height: 100vh;
+
+        }
+
+        .landing-page-3-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .landing-page-3-header-container{
+          display: flex;
+          flex-direction: row;
+          gap: 170px;
+        }
+
+        @media (max-width: 768px) {
+          .landing-page-3-header-container{
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        }
+
+        .landing-page-3-header {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .landing-page-3-title {
+            font-size: 55px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #000;
+        }
+
+        .landing-page-3-description {
+            font-size: 18px;
+            line-height: 1.6;
+            max-width: 800px;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .landing-page-3-game-cards {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            width: 100vw;
+        }
+
+        .landing-page-3-game-card {
+            flex: 0 0 auto;
+            width: 240px;
+            height: 300px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .landing-page-3-game-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .landing-page-3-card-overlay {
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .landing-page-3-card-header {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .landing-page-3-card-footer {
+            text-align: center;
+        }
+
+        .landing-page-3-card-logo {
+            max-width: 150px;
+            height: 40px;
+            margin: 0 auto;
+        }
+
+        .landing-page-3-evolution {
+            background: linear-gradient(to bottom, #3a6fbd 0%, #173462 100%);
+        }
+
+        .landing-page-3-ezugi {
+            background: linear-gradient(to bottom, #7dc13c 0%, #265211 100%);
+        }
+
+        .landing-page-3-betsoft {
+            background: linear-gradient(to bottom, #e74c3c 0%, #7f2c23 100%);
+        }
+
+        .landing-page-3-sa-gaming {
+            background: linear-gradient(to bottom, #f39c12 0%, #8e5c07 100%);
+        }
+
+        .landing-page-3-tvbet {
+            background: linear-gradient(to bottom, #9b59b6 0%, #5f3670 100%);
+        }
+
+        .landing-page-3-provider-logos {
+            display: flex;
+            gap: 15px;
+            overflow: hidden;
+            padding: 40px 0;
+            left: 0;
+
+            white-space: nowrap;
+            width: 100%;
+            position: absolute;
+            box-sizing: border-box;
+
+            img{
+                width: 250px;
+                height: 140px;
+            }
+
+        }
+
+        .landing-page-3-provider-logo {
+            flex: 0 0 auto;
+            width: 150px;
+            height: 80px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .landing-page-3-provider-logo img {
+            max-width: 80%;
+            max-height: 40px;
+        }
+
+        .logo-track {
+            display: inline-block;
+            white-space: nowrap;
+            animation: scroll 30s linear infinite;
+          }
+
+          .logo-track img {
+            height: 150px;
+            margin: 0 20px;
+            width: 300px;
+            display: inline-block;
+          }
+
+          @keyframes scroll {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+
+        @media (max-width: 768px) {
+
+            .logo-track{
+
+              img{
+                height: 75px;
+                width: max-content;
+                margin: 0 5px;
+              }
+
+            }
+
+            .landing-page-3-title {
+                font-size: 32px;
+            }
+
+            .landing-page-3-description {
+                font-size: 16px;
+            }
+
+            .landing-page-3-game-card {
+                width: 200px;
+                height: 250px;
+            }
+        }
+        </style>
+        <div class="landing-page-3-body">
+            <div class="landing-page-3-container">
+
+              <div class="landing-page-3-header-container">
+                <header class="landing-page-3-header">
+                  <h1 class="landing-page-3-title">Premium Game <br />
+                    Provider Integration</h1>
+                  <p class="landing-page-3-description">
+                    SpinBytes integrates top-tier game providers like Evolution, Pragmatic Play, Ezugi, and Spribe to power your platform with world-class content. From high-performing slots to live casino and crash games, our curated portfolio helps you maximize player engagement and boost revenue with ease.
+                  </p>
+              </header>
+
+              <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/1685163f-477d-4b8b-434d-bb2092c26700/public" />
+              </div>
+
+
+                <!-- Provider Logos Row -->
+                <div class="landing-page-3-provider-logos">
+                  <div class="logo-track">
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/82349e48-56f5-4616-3766-3361c262d400/public" />
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/812d37a6-027f-4a46-d0c3-ec4a07e51400/public" />
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/84878291-583b-4a39-b570-905603dc5400/public" />
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/ceb0a4f4-51c1-480b-cfaa-e1d6b5aba900/public" />
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/04e2795d-fb09-48c7-ea3d-0882acf73700/public" />
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/eb6639ea-062a-4d69-c412-8f008c37a100/public" />
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/ea3878c1-71a1-44c7-9277-478f0f6f6c00/public" />
+
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/82349e48-56f5-4616-3766-3361c262d400/public" />
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/812d37a6-027f-4a46-d0c3-ec4a07e51400/public" />
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/84878291-583b-4a39-b570-905603dc5400/public" />
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/ceb0a4f4-51c1-480b-cfaa-e1d6b5aba900/public" />
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/04e2795d-fb09-48c7-ea3d-0882acf73700/public" />
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/eb6639ea-062a-4d69-c412-8f008c37a100/public" />
+                    <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/ea3878c1-71a1-44c7-9277-478f0f6f6c00/public" />
+
+                  </div>
+                </div>
             </div>
-            
-            <!-- Sports Exchange Card -->
-            <div class="solution-card solution-card--sports">
-              <div class="solution-card__header">
-                <h3 class="solution-card__title">Sports Exchange</h3>
-                
-                <a href="#" class="solution-card__link">
-                  <span class="solution-card__icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </span>
-                </a>
-              </div>
-              
-              <!-- Default content (shown initially) -->
-              <div class="solution-card__default-content">
-                <p class="solution-card__description">
-                  SpinBytes offers a new-gen peer-to-peer Sports betting Exchange with enhanced capabilities for play betting, and real-time odds, backed by robust risk management, global sports coverage, and full operational support. It's built for high-performance trading and growth.
-                </p>
-              </div>
-              
-              <!-- Hover content (shown on hover) -->
-              <div class="solution-card__hover-content">
-                <ul class="solution-card__features">
-                  <li class="solution-card__feature">Advanced Peer-to-Peer Betting Platform</li>
-                  <li class="solution-card__feature">Real-Time Odds and Risk Management</li>
-                  <li class="solution-card__feature">Global Sports Coverage and API Integration</li>
-                </ul>
-              </div>
-              
-              <div class="solution-card__image">
-                <img src="assets/images/sports-exchange.png" alt="Sports Exchange Solution">
-              </div>
+        </div>
+      </section>
+
+      <section class="landing-page-4" id="Benefits">
+        <style>
+
+          .landing-page-4{
+
+              background: linear-gradient(180deg, #020E3C 40.87%, #0625A2 71.15%, #020E3C 96.63%);
+
+          }
+
+          .landing-page-4-container {
+            max-width: 1200px;
+              margin: 0 auto;
+              padding: 150px 20px;
+          }
+
+          .landing-page-4-header {
+              text-align: center;
+              margin-bottom: 50px;
+          }
+
+          .landing-page-4-header h1 {
+              font-size: 60px;
+              font-weight: 700;
+              margin-bottom: 10px;
+              color: white;
+              padding: 60px 0 0 0;
+          }
+
+          .landing-page-4-showcase {
+              display: flex;
+              justify-content: center;
+              margin-bottom: 50px;
+          }
+
+          .landing-page-4-showcase-img {
+              max-width: 100%;
+              height: auto;
+              border-radius: 8px;
+              box-shadow: 0 10px 30px rgba(0, 0, 255, 0.2);
+          }
+
+          .landing-page-4-features {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+              gap: 20px;
+              margin-bottom: 50px;
+          }
+
+          .landing-page-4-feature-card {
+              background-color: rgba(234, 236, 250, 0.10);
+              border-radius: 15px;
+              padding: 30px;
+              transition: transform 0.3s ease;
+              height: 100%;
+              border: 1px solid rgba(255, 255, 255, 0.189);
+          }
+
+          .landing-page-4-feature-card:hover {
+              transform: translateY(-10px);
+          }
+
+          .landing-page-4-feature-icon {
+              display: flex;
+              align-items: center;
+              margin-bottom: 20px;
+          }
+
+          .landing-page-4-icon {
+              width: 50px;
+              height: 50px;
+              background-color: #2e3bff;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin-right: 15px;
+          }
+
+          .landing-page-4-icon-img{
+            width: 35px;
+          }
+
+          .landing-page-4-feature-title {
+              font-size: 30px;
+              font-weight: 600;
+              margin-bottom: 15px;
+              color: white;
+          }
+
+          .landing-page-4-feature-text {
+              color: #b8b8d4;
+              font-size: 16px;
+          }
+
+          .landing-page-4-cta {
+              text-align: center;
+              margin-top: 40px;
+          }
+
+          .landing-page-4-cta-button {
+              background-color: #F00;;
+              color: white;
+              border: none;
+              padding: 15px 40px;
+              font-size: 18px;
+              font-weight: 600;
+              border-radius: 12px;
+              cursor: pointer;
+              transition: background-color 0.3s;
+              text-transform: uppercase;
+          }
+
+          .landing-page-4-cta-button:hover {
+              background-color: #ff5722;
+          }
+
+          @media (max-width: 768px) {
+              .landing-page-4-features {
+                  grid-template-columns: 1fr;
+              }
+
+              .landing-page-4-header h1 {
+                  font-size: 28px;
+              }
+          }
+      </style>
+
+      <div class="landing-page-4-container">
+        <div class="landing-page-4-header">
+            <h1>What You Get When You<br>Order from SpinBytes</h1>
+        </div>
+
+
+            <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/af9fe71a-d798-4d5b-73c3-2a0a07d66d00/public" alt="SpinBytes Platform Preview" >
+
+
+        <div class="landing-page-4-features">
+            <div class="landing-page-4-feature-card">
+                <div class="landing-page-4-feature-icon">
+                    <div class="landing-page-4-icon">
+                        <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/2a579793-50cf-4d73-b29b-2718aab65800/public" class="landing-page-4-icon-img" />
+                    </div>
+                </div>
+                <h3 class="landing-page-4-feature-title">Customized Website</h3>
+                <p class="landing-page-4-feature-text">We tailor your platform by adding your logo, banners, custom text, and contact details, ensuring a unique brand identity.</p>
+            </div>
+
+            <div class="landing-page-4-feature-card">
+                <div class="landing-page-4-feature-icon">
+                    <div class="landing-page-4-icon">
+                      <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/99aa3a64-69e4-49d8-375b-8ee7b297ae00/public" class="landing-page-4-icon-img" />
+                    </div>
+                </div>
+                <h3 class="landing-page-4-feature-title">Fast & Efficient Bug Fixes</h3>
+                <p class="landing-page-4-feature-text">Using advanced monitoring tools like Sentry, we quickly detect and resolve errors to keep your website running smoothly.</p>
+            </div>
+
+            <div class="landing-page-4-feature-card">
+                <div class="landing-page-4-feature-icon">
+                    <div class="landing-page-4-icon">
+                      <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/7b0cc040-46ef-4295-357a-c4bb015c3400/public"  class="landing-page-4-icon-img"/>
+                    </div>
+                </div>
+                <h3 class="landing-page-4-feature-title">Lifetime Support</h3>
+                <p class="landing-page-4-feature-text">We ensure your website remains functional and optimized—all with no extra cost.</p>
+            </div>
+
+            <div class="landing-page-4-feature-card">
+                <div class="landing-page-4-feature-icon">
+                    <div class="landing-page-4-icon">
+                        <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/a7d1e57c-ac98-4787-6fa0-081f3339e000/public" class="landing-page-4-icon-img" />
+                    </div>
+                </div>
+                <h3 class="landing-page-4-feature-title">On-Time Delivery</h3>
+                <p class="landing-page-4-feature-text">We commit to deadlines, and if delays, we compensate to the amount for each overdue day.</p>
+            </div>
+
+            <div class="landing-page-4-feature-card">
+                <div class="landing-page-4-feature-icon">
+                    <div class="landing-page-4-icon">
+                      <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/a59a43c2-277d-4731-aaa1-160b44292900/public"  class="landing-page-4-icon-img"/>
+                    </div>
+                </div>
+                <h3 class="landing-page-4-feature-title">Regular Updates</h3>
+                <p class="landing-page-4-feature-text">Regular core optimizations, feature upgrades, and the latest technology integrations to keep your platform ahead of the curve.</p>
+            </div>
+
+            <div class="landing-page-4-feature-card">
+                <div class="landing-page-4-feature-icon">
+                    <div class="landing-page-4-icon">
+                        <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/8f34ee9f-6d80-4743-9575-6ed08b640900/public" class="landing-page-4-icon-img" />
+                    </div>
+                </div>
+                <h3 class="landing-page-4-feature-title">Flexible Provider Selection</h3>
+                <p class="landing-page-4-feature-text">Access today's betting line, plus top-tier games from Pragmatic Play, Microgaming, TV Bet, and more.</p>
+            </div>
+        </div>
+
+        <div class="landing-page-4-cta">
+            <button class="landing-page-4-cta-button">Order Now</button>
+        </div>
+      </div>
+      </section>
+
+      <section class="turnkey-section">
+        <style>
+          /* CSS Variables - only those needed for this section */
+:root {
+  --primary-blue: #063c89;
+  --primary-red: #ff0000;
+  --gradient-main: linear-gradient(270.12deg, #ff0000 16.34%, #063c89 97.01%);
+}
+
+/* Typography Styles for Section */
+.heading-lg {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  line-height: 1.2;
+  color: white;
+}
+
+.text-red {
+  color: var(--primary-red);
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Section Container */
+
+.turnkey-section{
+  background: linear-gradient(180deg, #3C0202 40.87%, #A20606 77.88%);
+  padding: 100px 0;
+
+}
+
+
+
+.turnkey-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Platform Features Section */
+.platform-wrapper {
+  position: relative;
+  width: 100%;
+  height: 550px;
+  margin-top: 50px;
+}
+
+.platform-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.platform-image {
+  height: auto;
+}
+
+/* Floating platform features */
+.platform-feature {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  width: 300px;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.3;
+  transition: all 0.5s ease;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  animation: float 3s ease-in-out infinite;
+  z-index: 3;
+}
+
+/* Different animation timing for each feature to create natural movement */
+.feature-1 {
+  animation-delay: 0s;
+}
+.feature-2 {
+  animation-delay: 0.5s;
+}
+.feature-3 {
+  animation-delay: 1s;
+}
+.feature-4 {
+  animation-delay: 1.5s;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.platform-feature:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  animation-play-state: paused;
+  transform: translateY(-5px) scale(1.03);
+  z-index: 5;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Feature positions */
+.feature-1 {
+  top: 20%;
+  left: 5%;
+}
+
+.feature-2 {
+  top: 60%;
+  left: 8%;
+}
+
+.feature-3 {
+  top: 25%;
+  right: 5%;
+}
+
+.feature-4 {
+  top: 70%;
+  right: 8%;
+}
+
+/* Left side features */
+.feature-left {
+  flex-direction: row-reverse;
+}
+
+.feature-left span {
+  text-align: right;
+  margin-right: 15px;
+}
+
+/* Right side features */
+.feature-right span {
+  text-align: left;
+  margin-left: 15px;
+}
+
+.platform-feature img {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .platform-wrapper {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .platform-center {
+    position: relative;
+    transform: none;
+    top: auto;
+    left: auto;
+    margin: 30px 0;
+  }
+
+  .platform-image {
+    max-width: 100%;
+    width: 300px;
+  }
+
+  .platform-feature {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+    margin: 15px 0;
+    left: auto;
+    right: auto;
+    top: auto;
+  }
+
+  .feature-left,
+  .feature-right {
+    flex-direction: row;
+  }
+
+  .feature-left span,
+  .feature-right span {
+    text-align: left;
+    margin-left: 15px;
+    margin-right: 0;
+  }
+
+  .platform-feature img {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 40px 0;
+  }
+
+  .heading-lg {
+    font-size: 1.8rem;
+  }
+
+  .platform-wrapper {
+    margin-top: 30px;
+  }
+
+  .platform-features {
+    flex-direction: column;
+  }
+
+  .platform-feature {
+    flex-direction: row !important;
+    text-align: left !important;
+  }
+}
+        </style>
+        <div class="turnkey-container">
+          <h2 class="heading-lg">Turnkey Platform Solution</h2>
+          <p
+            class="text-center text-red"
+            style="font-size: 1.5rem; margin-bottom: 40px"
+          >
+            Get Started from as low as $5,000!
+          </p>
+
+          <div class="platform-wrapper">
+            <div class="platform-center">
+              <img
+                src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/b5733a8d-817f-4340-e1e3-2474d0f30400/public"
+                alt="Platform Interface"
+                class="platform-image"
+              />
+            </div>
+
+            <div class="platform-feature feature-1 feature-left">
+              <span
+                >Boost Your Business with High Registration Conversion Rate</span
+              >
+              <img
+                src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/8a5bf3f0-86fe-4e22-24c4-0ee35aa98e00/public"
+                alt="Bullet Point"
+              />
+            </div>
+
+            <div class="platform-feature feature-2 feature-left">
+              <span>Superfast Performance & Rock-Solid Stability</span>
+              <img
+                src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/8a5bf3f0-86fe-4e22-24c4-0ee35aa98e00/public"
+                alt="Bullet Point"
+              />
+            </div>
+
+            <div class="platform-feature feature-3 feature-right">
+              <span>Advanced Security & Data Protection Measures</span>
+              <img
+                src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/8a5bf3f0-86fe-4e22-24c4-0ee35aa98e00/public"
+                alt="Bullet Point"
+              />
+            </div>
+
+            <div class="platform-feature feature-4 feature-right">
+              <span>Intuitive User Interface for Higher Retention</span>
+              <img
+                src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/8a5bf3f0-86fe-4e22-24c4-0ee35aa98e00/public"
+                alt="Bullet Point"
+              />
             </div>
           </div>
         </div>
       </section>
 
+      <section class="cta-section">
+      <style>
+        /* Container and Layout Utilities */
+
+        .cta-section{
+          background: #D4DDEA;
+        }
+
+      .cta-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 50px;
+        border-radius: 20px;
+
+      }
+
+  .flex {
+    display: flex;
+  }
+
+  .flex-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .justify-between {
+    justify-content: space-between;
+  }
+
+  .items-center {
+    align-items: center;
+  }
+
+  .flex-wrap {
+    flex-wrap: wrap;
+  }
+
+  /* Button Styles */
+  .btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-white {
+    background-color: white;
+    color: #000000; /* var(--text-dark) */
+  }
+
+  /* CTA Section Specific Styles */
+  .cta-section {
+    position: relative;
+    padding: 80px 0;
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .cta-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .cta-title {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    line-height: 1.3;
+    margin-bottom: 20px;
+    color: white;
+  }
+
+  /* Media Queries */
+  @media (max-width: 992px) {
+    .cta-content {
+      flex-direction: column;
+      gap: 40px;
+      text-align: center;
+    }
+
+    .cta-section {
+      padding: 80px 20px;
+    }
+  }
+      </style>
+      <div class="cta-container"  style="background-image: url(https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/3dbbe4ce-0c5d-4fcc-535b-2d467071c700/public);">
+        <div class="cta-content flex justify-between items-center flex-wrap">
+          <h2 class="cta-title">
+            Why overpay when you can get<br />top quality for less?
+          </h2>
+          <div class="flex-col">
+            <p style="color: white; margin-bottom: 20px; max-width: 400px">
+              SpinBytes offers an affordable, high-performance solution tailored
+              to your needs! Get in Touch to Learn About Pricing.
+            </p>
+            <a href="#contact" class="btn btn-white">GET IN TOUCH</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="choose-section">
+      <style>
+        /* Container and Section Base Styles */
+      .choose-section {
+        padding: 100px 0;
+        min-height: max-content;
+        background: #DEE8F5;
+
+      }
+
+          .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+          }
+
+          /* Typography */
+          .section-title {
+
+            font-family: Poppins;
+            font-weight: 700;
+            font-size: 60px;
+            line-height: 60px;
+            letter-spacing: 0%;
+            text-align: center;
+
+          }
+
+          .accent {
+            color: #ff0000; /* var(--primary-red) */
+          }
+
+          /* Feature Cards Grid Layout */
+          .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(269px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+          }
+
+          /* Feature Card Styles */
+          .feature-card {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0px 0px 18px 12px rgb(0 0 0 / 0.05);
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            border: 1px solid rgb(0 0 0 / 5%);
+            transition: transform 0.3s;
+          }
+
+          .feature-card::before {
+            content: "";
+            position: absolute;
+            /* inset: 0;
+            border: 1px solid transparent;
+            border-radius: 0px;
+            background: var(--gradient-main);
+            -webkit-mask: linear-gradient(white 0 0) content-box,
+              linear-gradient(white 0 0);
+            mask: linear-gradient(white 0 0) content-box, linear-gradient(white 0 0);
+            mask-composite: exclude; */
+            z-index: 0;
+          }
+
+          .feature-card:hover {
+            transform: translateY(-5px);
+          }
+
+          .feature-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+
+            h3{
+              color: var(--Red, #F00);
+              font-family: Poppins;
+              font-size: 24px;
+              font-style: normal;
+              font-weight: 600;
+            }
+          }
+
+          .feature-card-icon {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+          }
+
+          .feature-card p {
+            position: relative;
+            z-index: 1;
+            font-weight: 200;
+          }
+
+          /* Media Queries */
+          @media (max-width: 768px) {
+            .section {
+              padding: 40px 0;
+            }
+
+            .feature-card-header h3 {
+              width: 50%;
+              margin-bottom: 0;
+              font-weight: 600;
+              line-height: 26px;
+              color: #F00;
+            }
+
+            .feature-card {
+              padding: 30px;
+            }
+
+            .feature-card p {
+              font-size: 1rem;
+              font-weight: 300;
+              line-height: 24px;
+            }
+          }
+      </style>
+      <div class="container">
+        <style>
+          .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+          }
+
+          /* Typography */
+          .section-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            text-align: center;
+            margin-bottom: 80px;
+          }
+
+          .accent {
+            color: #ff0000; /* var(--primary-red) */
+          }
+
+          /* Utility Classes */
+          .text-center {
+            text-align: center;
+          }
+
+          /* Media Queries */
+          @media (max-width: 768px) {
+            .section {
+              padding: 40px 0;
+            }
+          }
+        </style>
+        <h2 class="section-title">
+          Why do customers choose us?
+        </h2>
+        <div class="card-grid">
+          <div class="feature-card">
+            <div class="feature-card-header">
+              <img
+                src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/4975f4f2-a5a1-413b-4448-aa339354c700/public"
+                alt="Platform"
+                class="feature-card-icon"
+              />
+              <h3>Platform Solutions</h3>
+            </div>
+            <p>
+              Customizable sports betting websites and platforms for launching
+              online sportsbooks or casinos from scratch.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-card-header">
+              <img
+                src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/c03ec7d6-bf32-4e92-87d3-ac8450e9a900/public"
+                alt="API"
+                class="feature-card-icon"
+              />
+              <h3>API Integration</h3>
+            </div>
+            <p>
+              Seamless integration of sports betting lines and casino games with
+              a unified API.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-card-header">
+              <img
+                src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/1f067b30-5b7f-4a1c-6b3a-d64c73862800/public"
+                alt="Pricing"
+                class="feature-card-icon"
+              />
+              <h3>Affordable Pricing</h3>
+            </div>
+            <p>
+              Services offered at 50-70% lower costs than competitors, with
+              high-quality solutions.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-card-header">
+              <img
+                src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/448149f8-04ca-4af5-9278-4cf724ee3b00/public"
+                alt="Customization"
+                class="feature-card-icon"
+              />
+              <h3>Customizable Features</h3>
+            </div>
+            <p>
+              Platform customization with branding, logos, banners, and game
+              provider integration.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-card-header">
+              <img
+                src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/2f2fb261-acca-42c2-07ee-7db48b87f400/public"
+                alt="Scalable"
+                class="feature-card-icon"
+              />
+              <h3>Scalable Solutions</h3>
+            </div>
+            <p>
+              Wide variety of bet types, over 1,000 live events daily, and
+              multilingual support for global reach.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-card-header">
+              <img
+                src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/c58662b1-f5fd-4a2c-f99b-6605c2c06500/public"
+                alt="Team"
+                class="feature-card-icon"
+              />
+              <h3>Experienced Team</h3>
+            </div>
+            <p>
+              Developers with expertise from high-level positions like the
+              Central Bank of Russia, providing robust software and reliable
+              services.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="section" style="background-color: #E9F2FE">
+      <style>
+
+        #about{
+          min-height: unset;
+        }
+
+        .about-container{
+          p{
+            color: #4D4D4D;
+            text-align:center;
+            font-family: Poppins;
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 500;
+            max-width: 1300px;
+            margin: 0 auto 40px
+
+          }
+
+
+        }
+
+        @media (max-width: 992px) {
+
+          .about-container{
+          p{
+
+            text-align:justify;
+            font-size: 14px;
+            margin: 0 20px
+
+          }
+        }
+
+        }
+      </style>
+      <div class="about-container">
+        <h2 class="section-title"></h2>
+
+        <p style="">
+          SpinBytes is a top B2B iGaming provider, offering turnkey solutions
+          for online casinos and sportsbooks. Our platform features thousands of
+          games, live sports streaming, a robust sports exchange, and advanced
+          operator tools like a customizable CMS, crypto payments, affiliate
+          systems, and 24/7 support. Designed for scalability and player
+          retention, SpinBytes is the ultimate choice for iGaming success.
+
+
+        </p>
+        <!-- <div class="landing-page-5-buttons">
+          <button class="landing-page-5-button">Know More</button>
+      </div> -->
+
+        <div class="text-center" style="display: flex; justify-content: center;">
+
+          <img
+            src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/77359e21-92e5-490a-1e4f-01f6e9499000/public"
+            alt="SpinBytes Platform"
+            style="max-width: 100%"
+          />
+        </div>
+      </div>
+    </section>
+
+
+
       <!-- Integrations Section -->
-      <section id="integrations" class="section integrations">
-        <!-- Content will be added here -->
+      <section id="experience" class="experience-section">
+
+        <style>
+
+        .landing-page-5-body {
+            background: linear-gradient(180deg, #020E3C 40.87%, #0625A2 71.15%, #020E3C 96.63%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .landing-page-5-container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .landing-page-5-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .landing-page-5-title {
+            font-size: 50px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .landing-page-5-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .landing-page-5-feature-card {
+            background-color: rgb(252 252 252 / 11%);
+            border-radius: 12px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            height: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.189);
+        }
+
+        .landing-page-5-feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .landing-page-5-feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .landing-page-5-feature-img {
+            width: 231px;
+            height: 231px;
+            margin-top: 15px;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 255, 0.3));
+        }
+
+        .landing-page-5-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .landing-page-5-button {
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-transform: uppercase;
+            margin: 30px 0px;
+        }
+
+        .landing-page-5-button:hover {
+            background-color: #ff5722;
+        }
+
+        @media (max-width: 768px) {
+            .landing-page-5-features {
+                grid-template-columns: 1fr;
+            }
+
+            .landing-page-5-title {
+                font-size: 30px;
+            }
+
+            .landing-page-5-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        </style>
+
+        <div class="landing-page-5-body">
+          <div class="landing-page-5-container">
+              <header class="landing-page-5-header">
+                  <h1 class="landing-page-5-title">Experience Next-Level<br>Sportsbook Functionality</h1>
+              </header>
+
+              <div class="landing-page-5-features">
+                  <div class="landing-page-5-feature-card">
+                      <h3 class="landing-page-5-feature-title">Match Results from the Past</h3>
+                      <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/76f8d3ef-5eae-46c8-7a5e-3150e2dbbc00/public" alt="Match Results Interface" class="landing-page-5-feature-img">
+                  </div>
+
+                  <div class="landing-page-5-feature-card">
+                      <h3 class="landing-page-5-feature-title">Automatic Bet Calculations</h3>
+                      <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/d80cd00d-a295-47f7-a3f4-834320723400/public" alt="Automatic Bet Calculator" class="landing-page-5-feature-img">
+                  </div>
+
+                  <div class="landing-page-5-feature-card">
+                      <h3 class="landing-page-5-feature-title">Bet History with Secure Storage</h3>
+                      <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/e16fed21-7b07-42ce-23e1-4f724c23c800/public" alt="Secure Bet History" class="landing-page-5-feature-img">
+                  </div>
+
+                  <div class="landing-page-5-feature-card">
+                      <h3 class="landing-page-5-feature-title">Thousands of Sports Events with Live Updates</h3>
+                      <img src="https://imagedelivery.net/u45V04IDk2961F7ANAiDUw/24020c1b-6f94-476d-394d-23ea4138c800/public" alt="Live Sports Updates" class="landing-page-5-feature-img">
+                  </div>
+              </div>
+
+              <div class="landing-page-5-buttons">
+                  <button class="landing-page-5-button">Sports Exchange</button>
+                  <button class="landing-page-5-button">Sportsbook</button>
+              </div>
+          </div>
+        </div>
+
       </section>
 
-      <!-- Benefits Section -->
-      <section id="benefits" class="section benefits">
-        <!-- Content will be added here -->
-      </section>
 
-      <!-- Company Section -->
-      <section id="company" class="section company">
-        <!-- Content will be added here -->
-      </section>
+
+
+      <section id="footer">
+        <style>
+
+            .footer-section {
+                display: flex;
+                flex-direction: row;
+            }
+
+            .contact-info {
+                flex: 1;
+                padding: 100px 80px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                background-color: white;
+            }
+
+            .contact-form {
+                flex: 1;
+                padding: 40px;
+                background-color: #F40600;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+            }
+
+            .form-container {
+                background-color: rgba(255, 255, 255, 0.15);
+                border-radius: 16px;
+                padding: 30px;
+                width: 100%;
+                max-width: 400px;
+            }
+
+            h2 {
+                font-size: 24px;
+                margin-bottom: 15px;
+                font-weight: bold;
+                color: #222;
+            }
+
+            .email-link {
+                color: #F00;
+                font-size: 22px;
+                text-decoration: none;
+                margin-bottom: 20px;
+                display: block;
+                font-weight: 500;
+            }
+
+            .description {
+                color: #444;
+                line-height: 1.6;
+                font-size: 16px;
+                margin-bottom: 60px;
+                max-width: 400px;
+            }
+
+            .social-heading {
+                margin-bottom: 20px;
+            }
+
+            .social-icons {
+                display: flex;
+                gap: 12px;
+                margin-bottom: 40px;
+            }
+
+            .social-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 18px;
+            }
+
+            .instagram {
+                background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            }
+
+            .facebook {
+                background-color: #3b5998;
+            }
+
+            .twitter {
+                background-color: #000000;
+            }
+
+            .telegram {
+                background-color: #0088cc;
+            }
+
+            .whatsapp {
+                background-color: #25d366;
+            }
+
+            .copyright {
+                color: #777;
+                font-size: 14px;
+            }
+
+            .form-title {
+                color: white;
+                font-size: 28px;
+                margin-bottom: 24px;
+                line-height: 1.3;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            input, textarea {
+                width: 100%;
+                padding: 12px;
+                border: none;
+                border-radius: 8px;
+                background-color: rgba(255, 255, 255, 0.2);
+                color: white;
+            }
+
+            input::placeholder, textarea::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+            .checkbox-container {
+                display: flex;
+                align-items: flex-start;
+                margin: 20px 0;
+                gap: 10px;
+            }
+
+            .checkbox-container input {
+                width: auto;
+                margin-top: 5px;
+            }
+
+            .checkbox-label {
+                color: white;
+                font-size: 14px;
+                line-height: 1.4;
+            }
+
+            .policy-link {
+                color: white;
+                text-decoration: underline;
+            }
+
+            .submit-btn {
+                width: 100%;
+                padding: 14px;
+                background-color: #c43012;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-weight: bold;
+                font-size: 16px;
+                cursor: pointer;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            @media (max-width: 768px) {
+                .footer-section {
+                    flex-direction: column;
+                }
+
+                .contact-info {
+                    padding: 40px 20px;
+                }
+
+                .contact-form {
+                    padding: 30px 20px;
+                }
+            }
+        </style>
+        <div class="footer-section">
+            <div class="contact-info">
+                <h2>Email</h2>
+                <a href="mailto:contact@spinbytes.com" class="email-link">contact@spinbytes.com</a>
+
+                <p class="description">SpinBytes offers an affordable, high-performance solution tailored to your needs! Get in Touch to Learn About Pricing.</p>
+
+                <h2 class="social-heading">Social</h2>
+                <div class="social-icons">
+                    <a href="#" class="social-icon instagram">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon facebook">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon twitter">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon telegram">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon whatsapp">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <p class="copyright">@2025 SpinBytes. All Rights Reserved.</p>
+            </div>
+
+            <div class="contact-form">
+                <div class="form-container">
+                    <h2 class="form-title">Let's Build Something Great Together!</h2>
+
+                    <form>
+                        <div class="form-group">
+                            <input type="text" placeholder="Name">
+                        </div>
+
+                        <div class="form-group">
+                            <input type="email" placeholder="Email">
+                        </div>
+
+                        <div class="form-group">
+                            <textarea rows="3" placeholder="Message"></textarea>
+                        </div>
+
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="consent">
+                            <label for="consent" class="checkbox-label">
+                                I give consent to the processing of personal data and agree with <a href="#" class="policy-link">Privacy Policy</a>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="submit-btn">FREE CONSULTATION</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
     </main>
 
-    <!-- Footer will be included here later -->
-
-    <!-- JavaScript files -->
-    <script src="js/main.js"></script>
   </body>
 </html>
